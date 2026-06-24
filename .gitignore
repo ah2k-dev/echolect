@@ -1,0 +1,12 @@
+node_modules/
+dist/
+release/
+.vite/
+*.sqlite
+*.sqlite-journal
+*.webm
+*.mkv
+.env
+.DS_Store
+_old/
+restart.sh

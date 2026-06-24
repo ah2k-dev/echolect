@@ -1,0 +1,28 @@
+appId: dev.ah2k.echolect
+productName: Echolect
+directories:
+  output: release
+files:
+  - dist/**/*
+  - package.json
+# Publish to GitHub Releases (used by the release workflow with --publish).
+publish:
+  provider: github
+
+linux:
+  icon: logo.png
+  category: Office
+  maintainer: ah2k <https://ah2k.dev>
+  target:
+    - AppImage
+    - deb
+
+win:
+  icon: logo.png
+  target:
+    - nsis
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
