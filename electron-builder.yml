@@ -5,12 +5,15 @@ directories:
 files:
   - dist/**/*
   - package.json
+  # Bundled into the app so the runtime BrowserWindow icon resolves (see src/main/index.ts).
+  - logo.png
+  - logo-mark.png
 # Publish to GitHub Releases (used by the release workflow with --publish).
 publish:
   provider: github
 
 linux:
-  icon: logo.png
+  icon: build/icon.png
   category: Office
   maintainer: ah2k <https://ah2k.dev>
   target:
@@ -18,7 +21,7 @@ linux:
     - deb
 
 win:
-  icon: logo.png
+  icon: build/icon.png
   target:
     - nsis
 
