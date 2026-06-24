@@ -220,7 +220,7 @@ async function generateSummary(meeting: Meeting, seedSummary = ''): Promise<void
     `Transcript:\n${transcript}`,
     chat.trim() ? `Live assistant chat during the meeting (what was asked/answered):\n${chat}` : '',
     shots ? `Screenshots captured during the meeting (on-screen analysis — fold in anything relevant, e.g. a problem, slides, errors or diagrams shown on screen):\n${shots}` : '',
-    `Produce a clear, useful markdown summary (key points, decisions, and action items if any), then suggest names as instructed. No quotes.`,
+    `Produce a clear, useful markdown summary — key points, decisions, and action items if any — and nothing after it. Do NOT append a "Suggested Names", alternative-titles, or attendees/participants section; the meeting title belongs only in the TITLE line below. Name people only where it reads naturally inside the summary. No quotes.`,
     `IMPORTANT: This is not an agentic task. Do NOT use any tools and do NOT create, write, or edit any files — the app saves your reply itself. Respond with ONLY the summary, in exactly the format below, and nothing else (no preamble, no narration, no permission requests).`,
     fmt,
   ].filter(Boolean).join('\n\n');
