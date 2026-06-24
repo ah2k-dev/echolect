@@ -1,0 +1,55 @@
+# AppVeyor — builds the Windows installer on a REAL Windows runner.
+#
+# Why this exists: better-sqlite3 is the app's only native dependency, and Wine
+# on Linux can't cross-compile it — a Linux .node ends up inside the .exe and the
+# app dies on launch. The Windows installer must be built on actual Windows.
+# AppVeyor is free for public repositories.
+#
+# One-time setup:
+#   1. Sign in at https://ci.appveyor.com with your GitHub account.
+#   2. "New Project" → select ah2k-dev/echolect.
+#   3. Push to main (or hit "New Build"). When it finishes, the installer is under
+#      the build's "Artifacts" tab as "Echolect-Windows-Setup".
+#
+# To auto-attach the installer to a GitHub Release on tag builds: create a GitHub
+# personal access token (repo scope), encrypt it at
+# https://ci.appveyor.com/tools/encrypt, paste the result under deploy.auth_token,
+# and uncomment the deploy block below.
+
+version: "{build}"
+image: Visual Studio 2022
+
+environment:
+  nodejs_version: "20"
+
+cache:
+  - '%APPDATA%\npm-cache -> package-lock.json'
+
+install:
+  - ps: Install-Product node $env:nodejs_version x64
+  - node --version
+  - npm --version
+  # postinstall (electron-rebuild) compiles better-sqlite3 for the Windows Electron ABI.
+  - npm ci
+
+build_script:
+  # Builds renderer + main, then electron-builder produces the NSIS installer in release\.
+  - npm run package
+
+test: off
+
+artifacts:
+  - path: release\*.exe
+    name: Echolect-Windows-Setup
+
+# Auto-publish the installer to the matching GitHub Release on tag builds:
+# deploy:
+#   - provider: GitHub
+#     tag: $(APPVEYOR_REPO_TAG_NAME)
+#     auth_token:
+#       secure: <paste your encrypted GitHub token here>
+#     artifact: Echolect-Windows-Setup
+#     draft: false
+#     prerelease: false
+#     on:
+#       APPVEYOR_REPO_TAG: true

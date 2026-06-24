@@ -72,7 +72,7 @@ npm run build:electron  # compile the Electron main + preload
 npm run package         # build installers via electron-builder
 ```
 
-**Installers.** `npm run package` builds for your current OS — on Linux it produces an **AppImage** and a **.deb**; on Windows, an **NSIS installer** (all in `release/`). On Linux you can also cross-build the Windows installer with `npx electron-builder --win` (requires Wine). Published builds are uploaded to the [Releases](https://github.com/ah2k-dev/echolect/releases) page.
+**Installers.** `npm run package` builds for your current OS — on Linux it produces an **AppImage** and a **.deb**; on Windows, an **NSIS installer** (all in `release/`). The native `better-sqlite3` module can't be cross-compiled, so the Windows installer is built on a real Windows runner — the CI config lives in [`appveyor.yml`](appveyor.yml). Published builds are uploaded to the [Releases](https://github.com/ah2k-dev/echolect/releases) page.
 
 </details>
 
