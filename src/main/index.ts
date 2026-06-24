@@ -57,6 +57,10 @@ protocol.registerSchemesAsPrivileged([
 ]);
 
 app.whenReady().then(() => {
+  // Windows: tie the running window to the installed shortcut (matches appId in
+  // electron-builder.yml) so the taskbar shows the app icon and pinning works.
+  if (process.platform === 'win32') app.setAppUserModelId('dev.ah2k.echolect');
+
   // Handle media:// URLs — serve a local file with HTTP Range support so <video>/<audio> can
   // SEEK (without 206 Partial Content responses the player snaps back to the buffered position).
   protocol.handle('media', (request) => {
