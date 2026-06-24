@@ -33,8 +33,13 @@ install:
   - npm ci
 
 build_script:
-  # Builds renderer + main, then electron-builder produces the NSIS installer in release\.
-  - npm run package
+  # Build renderer + main, then package. `--publish never` is REQUIRED: electron-builder.yml
+  # has `publish: github`, so without it electron-builder tries to upload to a GitHub release
+  # and fails on the runner with "GH_TOKEN is not set". AppVeyor collects the artifact instead
+  # (and the optional deploy block below handles publishing).
+  - npm run build
+  - npm run build:electron
+  - npx electron-builder --win --publish never
 
 test: off
 
