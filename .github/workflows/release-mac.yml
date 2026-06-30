@@ -1,0 +1,54 @@
+# Builds the macOS app on a real Apple-Silicon runner (better-sqlite3 is native and
+# can't be cross-compiled). On pull requests it build-verifies and uploads the .dmg as
+# an artifact; on a v* tag it publishes the .dmg/.zip to the matching GitHub Release.
+# This is the macOS counterpart to the Windows AppVeyor pipeline (see appveyor.yml).
+name: release-mac
+
+on:
+  pull_request:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-mac:
+    runs-on: macos-14 # Apple Silicon -> arm64
+    permissions:
+      contents: write # allow the tag build to create/update the GitHub Release
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # postinstall runs electron-rebuild, which builds better-sqlite3 against Electron.
+      - run: npm ci
+
+      - run: npm run build
+      - run: npm run build:electron
+
+      # Tag builds publish to the matching GitHub Release; everything else just builds.
+      # electron-builder reads GH_TOKEN; publish: github is already set in electron-builder.yml.
+      - name: Package (publish on tags only)
+        run: |
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            npx electron-builder --mac --publish always
+          else
+            npx electron-builder --mac --publish never
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Make the build downloadable from non-tag runs (PRs) so reviewers can test it.
+      - name: Upload artifact
+        if: github.ref_type != 'tag'
+        uses: actions/upload-artifact@v4
+        with:
+          name: echolect-mac-arm64
+          path: |
+            release/*.dmg
+            release/*.zip
+          if-no-files-found: error
