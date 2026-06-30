@@ -12,7 +12,7 @@ Transcribe, understand, and get AI help while the conversation is still happenin
 ![Electron](https://img.shields.io/badge/Electron-47848F?style=flat-square&logo=electron&logoColor=white)
 ![Svelte 5](https://img.shields.io/badge/Svelte%205-FF3E00?style=flat-square&logo=svelte&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
-![Platform](https://img.shields.io/badge/Linux%20%C2%B7%20Windows-555?style=flat-square)
+![Platform](https://img.shields.io/badge/macOS%20%C2%B7%20Linux%20%C2%B7%20Windows-555?style=flat-square)
 
 </div>
 
@@ -42,6 +42,7 @@ Echolect listens alongside you during live meetings. It transcribes audio in rea
 ### 👤 As a user — install the app
 
 1. **Download** the installer for your OS from the [**Releases**](https://github.com/ah2k-dev/echolect/releases/latest) page:
+   - **macOS** (Apple Silicon) — `Echolect-*-arm64.dmg`; open it and drag Echolect to Applications. The build is unsigned, so the first launch is blocked by Gatekeeper — **right-click the app → Open** (then confirm), or run `xattr -dr com.apple.quarantine /Applications/Echolect.app`.
    - **Windows** — `Echolect-Setup-*.exe`
    - **Linux** — `Echolect-*.AppImage` (portable, runs anywhere) or `echolect_*_amd64.deb` (Debian/Ubuntu)
 2. **You'll also need** these — Echolect drives local tools, not cloud APIs:
@@ -72,7 +73,7 @@ npm run build:electron  # compile the Electron main + preload
 npm run package         # build installers via electron-builder
 ```
 
-**Installers.** `npm run package` builds for your current OS — on Linux it produces an **AppImage** and a **.deb**; on Windows, an **NSIS installer** (all in `release/`). The native `better-sqlite3` module can't be cross-compiled, so the Windows installer is built on a real Windows runner — the CI config lives in [`appveyor.yml`](appveyor.yml). Published builds are uploaded to the [Releases](https://github.com/ah2k-dev/echolect/releases) page.
+**Installers.** `npm run package` builds for your current OS — on macOS it produces a **.dmg** and a **.zip**; on Linux, an **AppImage** and a **.deb**; on Windows, an **NSIS installer** (all in `release/`). The native `better-sqlite3` module can't be cross-compiled, so each platform's build runs on its own runner: the Windows installer on a real Windows runner ([`appveyor.yml`](appveyor.yml)), and the macOS build on an Apple-Silicon GitHub Actions runner ([`.github/workflows/release-mac.yml`](.github/workflows/release-mac.yml), which publishes on `v*` tags). macOS builds are currently **unsigned** (no Apple Developer ID / notarization). Published builds are uploaded to the [Releases](https://github.com/ah2k-dev/echolect/releases) page.
 
 </details>
 

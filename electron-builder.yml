@@ -20,6 +20,13 @@ linux:
     - AppImage
     - deb
 
+mac:
+  icon: build/icon.png
+  category: public.app-category.productivity
+  target:
+    - dmg
+    - zip
+
 win:
   icon: build/icon.png
   target:
